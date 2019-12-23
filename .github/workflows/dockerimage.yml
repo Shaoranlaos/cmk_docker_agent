@@ -17,4 +17,4 @@ jobs:
       with:
         IMAGE_NAME: cmk_docker_agent
         DOCKERFILE_PATH: 'Dockerfile'
-    
+        TAG: latest    
