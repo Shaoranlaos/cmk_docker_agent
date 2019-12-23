@@ -12,9 +12,9 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag cmk_docker_agent:$(date +%s)
-    - name: Publish Docker Images to GPR
-      uses: machine-learning-apps/gpr-docker-publish@v1.3
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        IMAGE_NAME: cmk_docker_agent
-        DOCKERFILE_PATH: 'Dockerfile'
-        TAG: latest    
+        name: Shaoranlaos/cmk_docker_agent
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
