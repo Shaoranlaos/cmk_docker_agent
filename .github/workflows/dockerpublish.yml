@@ -14,3 +14,8 @@ jobs:
       run: docker build . --file Dockerfile --tag cmk_docker_agent:$(date +%s)
     - name: Publish Docker Images to GPR
       uses: machine-learning-apps/gpr-docker-publish@master
+      with:
+        username: shaoranlaos
+        IMAGE_NAME: cmk_docker_agent
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
