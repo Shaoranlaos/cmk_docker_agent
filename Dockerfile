@@ -10,7 +10,7 @@ COPY docker.cfg /etc/check_mk/docker.cfg
 COPY check_mk_agent.linux /usr/bin/check_mk_agent
 COPY socket.py /usr/bin/socketServer
 
-RUN chmod +x /usr/bin/socketServer
+RUN chmod +x /usr/bin/socketServer /usr/bin/check_mk_agent
 
 EXPOSE 6556
 
