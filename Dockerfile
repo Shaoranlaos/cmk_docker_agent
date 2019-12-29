@@ -13,5 +13,5 @@ COPY start.sh /usr/bin/start
 
 EXPOSE 6556
 
-CMD start
+CMD socketServer
 
