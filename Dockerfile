@@ -11,6 +11,8 @@ COPY check_mk_agent.linux /usr/bin/check_mk_agent
 COPY socket.py /usr/bin/socketServer
 COPY start.sh /usr/bin/start
 
+RUN chmod +x /usr/bin/socketServer
+
 EXPOSE 6556
 
 CMD socketServer
