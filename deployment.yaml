@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+    deprecated.daemonset.template.generation: "4"
+    field.cattle.io/creatorId: user-g4xfx
+    field.cattle.io/publicEndpoints: '[{"nodeName":"c-lrnz7:m-3b038d0f69e3","addresses":["192.168.21.90"],"port":6558,"protocol":"TCP","podName":"checkmk:cmk-docker-agent-gnfxr","allNodes":false},{"nodeName":"c-lrnz7:m-e9404191d46d","addresses":["192.168.21.91"],"port":6558,"protocol":"TCP","podName":"checkmk:cmk-docker-agent-z626p","allNodes":false}]'
+  creationTimestamp: "2020-02-23T13:08:15Z"
+  generation: 4
+  labels:
+    cattle.io/creator: norman
+    workload.user.cattle.io/workloadselector: daemonSet-checkmk-cmk-docker-agent
+  name: cmk-docker-agent
+  namespace: checkmk
+  resourceVersion: "22583171"
+  selfLink: /apis/apps/v1/namespaces/checkmk/daemonsets/cmk-docker-agent
+  uid: 64273d89-52b8-497d-a7f6-6505faa70797
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: daemonSet-checkmk-cmk-docker-agent
+  template:
+    metadata:
+      annotations:
+        cattle.io/timestamp: "2020-05-01T14:37:56Z"
+        field.cattle.io/ports: '[[{"containerPort":6556,"dnsName":"cmk-docker-agent-hostport","hostPort":6558,"kind":"HostPort","name":"checkmk","protocol":"TCP","sourcePort":6558}]]'
+      creationTimestamp: null
+      labels:
+        workload.user.cattle.io/workloadselector: daemonSet-checkmk-cmk-docker-agent
+    spec:
+      containers:
+      - image: docker.pkg.github.com/shaoranlaos/cmk_docker_agent/cmk_docker_agent
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 60
+          successThreshold: 1
+          tcpSocket:
+            port: 6556
+          timeoutSeconds: 5
+        name: cmk-docker-agent
+        ports:
+        - containerPort: 6556
+          hostPort: 6558
+          name: checkmk
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 60
+          successThreshold: 2
+          tcpSocket:
+            port: 6556
+          timeoutSeconds: 5
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities: {}
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+        stdin: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        tty: true
+        volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: vol1
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: dc-9f9v9
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - hostPath:
+          path: /var/run/docker.sock
+          type: Socket
+        name: vol1
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+status:
+  currentNumberScheduled: 2
+  desiredNumberScheduled: 2
+  numberAvailable: 2
+  numberMisscheduled: 0
+  numberReady: 2
+  observedGeneration: 4
+  updatedNumberScheduled: 2
