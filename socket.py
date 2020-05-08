@@ -20,7 +20,6 @@ class stdout_():
 
 srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print("Start server")
-old_out = sys.stdout
 
 srv.bind((HOST, PORT))
 srv.listen(0)
@@ -30,11 +29,8 @@ while 1:
     sock_resp, addr_resp = srv.accept()
     print 'Connected by', addr_resp
 
-    #new_out = stdout_(sock_resp)
-    #sys.stdout = new_out
-    sys.stdout = sock_resp.makefile('w',0)
-    
-    subprocess.call('check_mk_agent',stdout=sys.stdout)
-    sys.stdout = old_out
+    output = sock_resp.makefile('w',0)
+    p = subprocess.Popen('check_mk_agent',stdout=output)
+    output, errors = p.communicate()
     sock_resp.close()
 
