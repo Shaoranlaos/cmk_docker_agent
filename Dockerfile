@@ -2,8 +2,7 @@ FROM python:2-alpine
 
 LABEL maintainer="shaoranlaos@shaoranlaos.de"
 
-RUN apk add --no-cache bash
-RUN pip install docker
+RUN apk add --no-cache bash && pip install docker
 
 COPY mk_docker.py /usr/lib/check_mk_agent/plugins/mk_docker.py
 COPY docker.cfg /etc/check_mk/docker.cfg
