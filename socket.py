@@ -2,35 +2,31 @@
 
 import socket
 import os
-import sys
 import subprocess
+from _thread import *
+
+ServerSocket = socket.socket()
+host = '0.0.0.0'
+port = 6556
+ThreadCount = 0
+try:
+    ServerSocket.bind((host, port))
+except socket.error as e:
+    print(str(e))
+
+print('Waitiing for a Connection..')
+ServerSocket.listen(5)
 
 
-HOST = '0.0.0.0'
-PORT = 6556
+def threaded_client(connection):
+    result = subprocess.check_output(['check_mk_agent'])
+    connection.sendall(str.encode(result.stdout.decode('utf-8')))
+    connection.close()
 
-class stdout_():
-
-    def __init__(self, sock_resp):
-        self.sock_resp = sock_resp
-
-    def write(self, mes):
-        self.sock_resp.send(mes)
-
-
-srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-print("Start server")
-
-srv.bind((HOST, PORT))
-srv.listen(0)
-
-
-while 1:
-    sock_resp, addr_resp = srv.accept()
-    print 'Connected by', addr_resp
-
-    output = sock_resp.makefile('w',0)
-    p = subprocess.Popen('check_mk_agent',stdout=output)
-    output, errors = p.communicate()
-    sock_resp.close()
-
+while True:
+    Client, address = ServerSocket.accept()
+    print('Connected to: ' + address[0] + ':' + str(address[1]))
+    start_new_thread(threaded_client, (Client, ))
+    ThreadCount += 1
+    print('Thread Number: ' + str(ThreadCount))
+ServerSocket.close()
